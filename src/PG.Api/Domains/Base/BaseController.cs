@@ -1,0 +1,76 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using PG.BLL;
+using PG.Common;
+using PG.Model;
+
+namespace PG.Api.Domains.Base
+{
+    public abstract class BaseController<TNewDto, TEditDto, TDto, TEntity, TService> : Controller
+        where TEntity : BaseModel, new()
+        where TNewDto : BaseNewDto<TEntity> 
+        where TEditDto : BaseDto<TEntity> 
+        where TDto : BaseDto<TEntity>, new()
+        where TService : IService<TEntity>
+    {
+        protected TService Svc;
+        protected ILogger Logger;
+
+        protected BaseController(TService service)
+        {
+            Svc = service;
+            Logger = LoggerManager.GetLogger();
+        }
+
+        protected BaseController(TService service, ILogger logger)
+        {
+            Svc = service;
+            Logger = logger;
+        }
+
+        public virtual ActionResult<TDto> Get(int id)
+        {
+            var entity = Svc.GetById(id);
+            if (entity == null)
+                return NotFound();
+
+            var item = new TDto();
+            item.LoadFromEntity(entity);
+            
+            return Ok(item);
+        }
+        
+        public virtual IActionResult Post(TNewDto value, string createdAtRouteName)
+        {
+            var newEntity = value.ToEntity();
+            var id = Svc.Create(newEntity);
+
+            var item = new TDto();
+            item.LoadFromEntity(newEntity);
+            
+            return CreatedAtRoute(createdAtRouteName, new {id}, item);
+        }
+        
+        public virtual ActionResult<TDto> Put(int id, TEditDto value)
+        {
+            if (id != value.Id)
+                return BadRequest();
+
+            var originalEntity = Svc.GetById(id);
+            var updatedEntity = value.ToEntity(originalEntity);
+
+            Svc.Update(updatedEntity);
+
+            var item = new TDto();
+            item.LoadFromEntity(updatedEntity);
+
+            return Ok(item);
+        }
+        
+        public virtual IActionResult Delete(int id)
+        {
+            Svc.Delete(id);
+
+            return NoContent();
+        }
+    }
+}

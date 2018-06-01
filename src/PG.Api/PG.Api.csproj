@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Domains\Facility\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
