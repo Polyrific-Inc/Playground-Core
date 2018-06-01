@@ -1,4 +1,5 @@
-﻿using PG.Model;
+﻿using AutoMapper;
+using PG.Model;
 
 namespace PG.Api.Domains.Base
 {
@@ -7,8 +8,8 @@ namespace PG.Api.Domains.Base
     {
         public virtual TEntity ToEntity()
         {
-            //return Mapper.Map<TEntity>(this);
-            return null;
+            return Mapper.Map<TEntity>(this);
+            
         }
     }
 }

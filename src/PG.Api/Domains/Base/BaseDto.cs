@@ -1,4 +1,5 @@
-﻿using PG.Model;
+﻿using AutoMapper;
+using PG.Model;
 
 namespace PG.Api.Domains.Base
 {
@@ -11,7 +12,7 @@ namespace PG.Api.Domains.Base
         {
             var updatedEntity = originalEntity;
 
-            //Mapper.Map(this, updatedEntity);
+            Mapper.Map(this, updatedEntity);
 
             return updatedEntity;
         }
