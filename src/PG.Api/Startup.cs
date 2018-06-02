@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

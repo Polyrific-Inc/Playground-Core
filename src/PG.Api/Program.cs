@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore;
+﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using NLog.Web;
 

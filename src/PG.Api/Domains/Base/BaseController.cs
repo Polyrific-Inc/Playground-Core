@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PG.BLL;
 using PG.Model;

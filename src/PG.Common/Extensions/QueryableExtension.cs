@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
+using System.Linq;
 
 namespace PG.Common.Extensions
 {

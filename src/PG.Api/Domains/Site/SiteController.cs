@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PG.Api.Domains.Base;
 using PG.Api.Domains.Facility;

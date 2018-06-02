@@ -1,4 +1,6 @@
-﻿using System;
+﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
+using System;
 using Microsoft.Extensions.Logging;
 using PG.Common;
 using PG.Model;

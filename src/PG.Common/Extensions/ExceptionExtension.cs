@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
+using System.Collections.Generic;
 
 namespace PG.Common.Extensions
 {
