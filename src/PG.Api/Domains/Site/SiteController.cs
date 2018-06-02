@@ -5,47 +5,48 @@ using PG.Api.Domains.Facility;
 using PG.BLL;
 using PG.Common;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace PG.Api.Domains.Site
 {
     [Route("Site")]
     public class SiteController : BaseController<NewSiteDto, EditSiteDto, SiteDto, Model.Site, ISiteService>
     {
-        public SiteController(ISiteService siteService)
-            : base(siteService)
+        public SiteController(ISiteService siteService, ILogger<SiteController> logger)
+            : base(siteService, logger)
         {
             
         }
 
-        [Route("{id}", Name = "GetSiteById")]
+        [HttpGet("{id}", Name = "GetSiteById")]
         public override ActionResult<SiteDto> Get(int id)
         {
             return base.Get(id);
         }
 
-        [Authorize]
-        [Route("")]
-        public IActionResult Post(NewSiteDto value)
+        //[Authorize]
+        [HttpPost("")]
+        public IActionResult Post([FromBody] NewSiteDto value)
         {
             return base.Post(value, "GetSiteById");
         }
 
         [Authorize]
-        [Route("{id}")]
+        [HttpPut("{id}")]
         public override ActionResult<SiteDto> Put(int id, [FromBody] EditSiteDto value)
         {
             return base.Put(id, value);
         }
 
         [Authorize]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public override IActionResult Delete(int id)
         {
             return base.Delete(id);
         }
 
-        [Route("n/{name}", Name = "GetSiteByName")]
-        public ActionResult<SiteDto> Get(string name)
+        [HttpGet("n/{name}")]
+        public ActionResult<SiteDto> GetSiteByName(string name)
         {
             var list = Svc.GetByName(name);
 
@@ -78,7 +79,7 @@ namespace PG.Api.Domains.Site
 
         [Authorize]
         [HttpPost("{id}/AddFacility")]
-        public IActionResult AddFacility(int id, NewFacilityDto value)
+        public IActionResult AddFacility(int id, [FromBody] NewFacilityDto value)
         {
             var entity = Svc.GetById(id);
             if (entity == null)

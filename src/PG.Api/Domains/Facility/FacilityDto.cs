@@ -15,8 +15,7 @@ namespace PG.Api.Domains.Facility
 
             Name = entity.Name;
             Description = entity.Description;
-            Images = entity.Images;
-
+            
             if (entity.Site != null)
                 Site = Mapper.Map<Model.Site, SiteDto>(entity.Site);
 

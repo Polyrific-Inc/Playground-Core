@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PG.Api.Domains.Base;
 using PG.BLL;
 
@@ -10,32 +11,33 @@ namespace PG.Api.Domains.Facility
     [Route("Facility")]
     public class FacilityController : BaseController<NewFacilityDto, EditFacilityDto, FacilityDto, Model.Facility, IFacilityService>
     {
-        public FacilityController(IFacilityService service) : base(service)
+        public FacilityController(IFacilityService service, ILogger<FacilityController> logger) 
+            : base(service, logger)
         {
         }
 
-        [Route("{id}", Name = "GetFacilityById")]
+        [HttpGet("{id}", Name = "GetFacilityById")]
         public override ActionResult<FacilityDto> Get(int id)
         {
             return base.Get(id);
         }
 
         [Authorize]
-        [Route("")]
-        public IActionResult Post(NewFacilityDto value)
+        [HttpPost("")]
+        public IActionResult Post([FromBody] NewFacilityDto value)
         {
             return base.Post(value, "GetFacilityById");
         }
 
         [Authorize]
-        [Route("{id}")]
-        public override ActionResult<FacilityDto> Put(int id, EditFacilityDto value)
+        [HttpPut("{id}")]
+        public override ActionResult<FacilityDto> Put(int id, [FromBody] EditFacilityDto value)
         {
             return base.Put(id, value);
         }
 
         [Authorize]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         public override IActionResult Delete(int id)
         {
             return base.Delete(id);

@@ -6,7 +6,7 @@ namespace PG.Model
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string[] Images { get; set; }
+        //public string[] Images { get; set; }
         //public DbGeography Location { get; set; }
 
         public int SiteId { get; set; }

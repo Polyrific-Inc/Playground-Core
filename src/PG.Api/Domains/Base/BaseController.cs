@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PG.BLL;
-using PG.Common;
 using PG.Model;
 
 namespace PG.Api.Domains.Base
@@ -14,19 +14,13 @@ namespace PG.Api.Domains.Base
     {
         protected TService Svc;
         protected ILogger Logger;
-
-        protected BaseController(TService service)
-        {
-            Svc = service;
-            Logger = LoggerManager.GetLogger();
-        }
-
+        
         protected BaseController(TService service, ILogger logger)
         {
             Svc = service;
             Logger = logger;
         }
-
+        
         public virtual ActionResult<TDto> Get(int id)
         {
             var entity = Svc.GetById(id);
@@ -39,7 +33,7 @@ namespace PG.Api.Domains.Base
             return Ok(item);
         }
         
-        public virtual IActionResult Post(TNewDto value, string createdAtRouteName)
+        public virtual IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
         {
             var newEntity = value.ToEntity();
             var id = Svc.Create(newEntity);

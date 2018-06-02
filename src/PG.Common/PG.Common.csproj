@@ -4,4 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ILogger.cs" />
+    <Compile Remove="LoggerManager.cs" />
+  </ItemGroup>
+
 </Project>
