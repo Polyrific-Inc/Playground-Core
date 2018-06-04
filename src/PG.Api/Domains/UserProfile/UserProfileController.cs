@@ -11,7 +11,7 @@ namespace PG.Api.Domains.UserProfile
     [Route("UserProfile")]
     public class UserProfileController : BaseController<UserProfileDto, EditUserProfileDto, UserProfileDto, Model.UserProfile, IUserProfileService>
     {
-        protected UserProfileController(IUserProfileService service, ILogger logger) : base(service, logger)
+        public UserProfileController(IUserProfileService service, ILogger<UserProfileController> logger) : base(service, logger)
         {
         }
 

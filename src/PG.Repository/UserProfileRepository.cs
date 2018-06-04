@@ -13,7 +13,7 @@ namespace PG.Repository
 {
     public class UserProfileRepository : BaseRepository<UserProfile>, IUserProfileRepository
     {
-        protected UserProfileRepository(PlaygroundDbContext dbContext, IDistributedCache cache, ILogger logger) : base(dbContext, cache, logger)
+        public UserProfileRepository(PlaygroundDbContext dbContext, IDistributedCache cache, ILogger<UserProfileRepository> logger) : base(dbContext, cache, logger)
         {
         }
 

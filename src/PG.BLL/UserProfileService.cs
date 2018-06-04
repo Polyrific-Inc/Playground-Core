@@ -8,7 +8,7 @@ namespace PG.BLL
 {
     public class UserProfileService : BaseService<UserProfile, IUserProfileRepository>, IUserProfileService
     {
-        protected UserProfileService(IUserProfileRepository repository, ILogger logger) : base(repository, logger)
+        public UserProfileService(IUserProfileRepository repository, ILogger<UserProfileService> logger) : base(repository, logger)
         {
         }
 
