@@ -3,12 +3,14 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PG.Api.DIConfigs;
 using PG.DataAccess;
+using PG.Model.Identity;
 
 namespace PG.Api
 {
@@ -25,17 +27,22 @@ namespace PG.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<PlaygroundDbContext>(options =>
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 });
 
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<PlaygroundDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddDistributedRedisCache(options => { options.Configuration = "localhost"; });
 
             services.RegisterAppRepositories();
             services.RegisterAppServices();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
