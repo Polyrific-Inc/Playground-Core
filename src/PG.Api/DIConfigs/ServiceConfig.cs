@@ -11,6 +11,7 @@ namespace PG.Api.DIConfigs
         {
             services.AddTransient<IFacilityService, FacilityService>();
             services.AddTransient<ISiteService, SiteService>();
+            services.AddTransient<IUserProfileService, UserProfileService>();
         }
     }
 }

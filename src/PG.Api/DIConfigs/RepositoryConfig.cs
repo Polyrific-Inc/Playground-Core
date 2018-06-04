@@ -11,6 +11,7 @@ namespace PG.Api.DIConfigs
         {
             services.AddScoped<IFacilityRepository, FacilityRepository>();
             services.AddScoped<ISiteRepository, SiteRepository>();
+            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
         }
     }
 }
