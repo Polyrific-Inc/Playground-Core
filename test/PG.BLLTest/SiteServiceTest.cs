@@ -8,25 +8,38 @@ using PG.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using PG.Common;
 using Xunit;
 
 namespace PG.BLLTest
 {
     public class SiteServiceTest
     {
-        private readonly List<Site> _data;
+        private readonly List<Site> _siteData;
+        private readonly List<Facility> _facilityData;
         private readonly Mock<ISiteRepository> _siteRepository;
         private readonly Mock<IFacilityRepository> _facilityRepository;
         private readonly Mock<ILogger<SiteService>> _logger;
         
         public SiteServiceTest()
         {
-            _data = new List<Site>
+            _siteData = new List<Site>
             {
                 new Site
                 {
                     Id = 1,
                     Name = "Site 1"
+                }
+            };
+
+            _facilityData = new List<Facility>
+            {
+                new Facility
+                {
+                    Id = 1,
+                    Name = "Facility 1",
+                    SiteId = 1
                 }
             };
 
@@ -41,30 +54,90 @@ namespace PG.BLLTest
         {
             _siteRepository.Setup(r => r.Get(It.IsAny<int>())).Returns((int id) =>
             {
-                return _data.FirstOrDefault(d => d.Id == id);
+                return _siteData.FirstOrDefault(d => d.Id == id);
             });
 
             _siteRepository.Setup(r => r.Create(It.IsAny<Site>())).Returns(2).Callback((Site item) =>
             {
                 item.Id = 2;
-                _data.Add(item);
+                _siteData.Add(item);
             });
 
             _siteRepository.Setup(r => r.Update(It.IsAny<Site>())).Callback((Site item) =>
             {
-                var oldItem = _data.FirstOrDefault(d => d.Id == item.Id);
+                var oldItem = _siteData.FirstOrDefault(d => d.Id == item.Id);
                 if (oldItem != null)
                 {
-                    _data.Remove(oldItem);
-                    _data.Add(item);
+                    _siteData.Remove(oldItem);
+                    _siteData.Add(item);
                 }
             });
 
             _siteRepository.Setup(d => d.Delete(It.IsAny<int>())).Callback((int id) =>
             {
-                var deleteddata = _data.FirstOrDefault(a => a.Id == id);
+                var deleteddata = _siteData.FirstOrDefault(a => a.Id == id);
                 if (deleteddata != null)
-                    _data.Remove(deleteddata);
+                    _siteData.Remove(deleteddata);
+            });
+
+            _siteRepository
+                .Setup(r => r.Filter(It.IsAny<int>(), It.IsAny<int>(),
+                    It.IsAny<OrderBySelector<Site, string>>(), It.IsAny<Expression<Func<Site, bool>>>(),
+                    It.IsAny<Expression<Func<Site, object>>[]>()))
+                .Returns((int pageIndex, int pageSize, 
+                    OrderBySelector<Site, string> orderBySelector, Expression<Func<Site, bool>> whereFilter, 
+                    Expression<Func<Site, object>>[] includeProperties) =>
+                {
+                    var items = _siteData.Where(whereFilter.Compile()).ToList();
+                    var totalCount = items.Count;
+
+                    var source = totalCount > pageSize
+                        ? items.OrderBy(orderBySelector.Selector.Compile()).Skip((pageIndex - 1) * pageSize)
+                            .Take(pageSize)
+                        : items;
+                    
+                    return new PagedList<Site>(source, pageIndex, pageSize, totalCount);
+                });
+
+            _facilityRepository.Setup(r => r.Get(It.IsAny<int>(), f => f.Site)).Returns((int id, Expression<Func<Facility, object>>[] includeProperties) =>
+            {
+                var item = _facilityData.FirstOrDefault(d => d.Id == id);
+                if (item != null)
+                    item.Site = new Site();
+
+                return item;
+            });
+
+            _facilityRepository
+                .Setup(r => r.Filter(It.IsAny<int>(), It.IsAny<int>(),
+                    It.IsAny<OrderBySelector<Facility, string>>(), It.IsAny<Expression<Func<Facility, bool>>>(),
+                    It.IsAny<Expression<Func<Facility, object>>[]>()))
+                .Returns((int pageIndex, int pageSize, 
+                    OrderBySelector<Facility, string> orderBySelector, Expression<Func<Facility, bool>> whereFilter, 
+                    Expression<Func<Facility, object>>[] includeProperties) =>
+                {
+                    var items = _facilityData.Where(whereFilter.Compile()).ToList();
+                    var totalCount = items.Count;
+
+                    var source = totalCount > pageSize
+                        ? items.OrderBy(orderBySelector.Selector.Compile()).Skip((pageIndex - 1) * pageSize)
+                            .Take(pageSize)
+                        : items;
+                    
+                    return new PagedList<Facility>(source, pageIndex, pageSize, totalCount);
+                });
+
+            _facilityRepository.Setup(r => r.Create(It.IsAny<Facility>())).Returns(2).Callback((Facility item) =>
+            {
+                item.Id = 2;
+                _facilityData.Add(item);
+            });
+
+            _facilityRepository.Setup(d => d.Delete(It.IsAny<int>())).Callback((int id) =>
+            {
+                var deleteddata = _facilityData.FirstOrDefault(a => a.Id == id);
+                if (deleteddata != null)
+                    _facilityData.Remove(deleteddata);
             });
         }
 
@@ -108,7 +181,7 @@ namespace PG.BLLTest
             Assert.Equal(newId, returnId);
             Assert.NotEqual(0, newItem.Id);
             Assert.NotEqual(DateTime.MinValue, newItem.Created);
-            Assert.True(_data.Count == 2);
+            Assert.True(_siteData.Count == 2);
         }
 
         [Theory]
@@ -128,7 +201,7 @@ namespace PG.BLLTest
             var service = new SiteService(_siteRepository.Object, _facilityRepository.Object, _logger.Object);
             service.Update(updatedItem);
 
-            var updatedData = _data.FirstOrDefault(d => d.Id == id);
+            var updatedData = _siteData.FirstOrDefault(d => d.Id == id);
 
             //assert
             if (updatedData != null)
@@ -147,7 +220,90 @@ namespace PG.BLLTest
             service.Delete(id);
 
             //assert
-            Assert.DoesNotContain(_data, d => d.Id == id);
+            Assert.DoesNotContain(_siteData, d => d.Id == id);
+        }
+
+        [Theory]
+        [InlineData("Site 1")]
+        public void GetByName_ReturnItems(string name)
+        {
+            //act
+            var service = new SiteService(_siteRepository.Object, _facilityRepository.Object, _logger.Object);
+            var items = service.GetByName(name);
+
+            //assert
+            Assert.Single(items.Items);
+            Assert.True(items.Items.TrueForAll(i => i.Name.Contains(name)));
+        }
+
+        [Theory]
+        [InlineData("Site 2")]
+        public void GetByName_ReturnEmpty(string name)
+        {
+            //act
+            var service = new SiteService(_siteRepository.Object, _facilityRepository.Object, _logger.Object);
+            var items = service.GetByName(name);
+
+            //assert
+            Assert.Empty(items.Items);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void GetFacilities_ReturnItems(int siteId)
+        {
+            //act
+            var service = new SiteService(_siteRepository.Object, _facilityRepository.Object, _logger.Object);
+            var items = service.GetFacilities(siteId);
+
+            //assert
+            Assert.Single(items.Items);
+            Assert.True(items.Items.TrueForAll(i => i.SiteId == siteId));
+        }
+
+        [Theory]
+        [InlineData(2)]
+        public void GetFacilities_ReturnEmpty(int siteId)
+        {
+            //act
+            var service = new SiteService(_siteRepository.Object, _facilityRepository.Object, _logger.Object);
+            var items = service.GetFacilities(siteId);
+
+            //assert
+            Assert.Empty(items.Items);
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        public void AddFacility_ValidModel_ReturnId(int siteId, int facilityId)
+        {
+            var newItem = new Facility
+            {
+                Id = facilityId,
+                SiteId = siteId
+            };
+
+            //act
+            var service = new SiteService(_siteRepository.Object, _facilityRepository.Object, _logger.Object);
+            var returnId = service.AddFacility(siteId, newItem);
+
+            //assert
+            Assert.Equal(facilityId, returnId);
+            Assert.NotEqual(0, newItem.Id);
+            Assert.NotEqual(DateTime.MinValue, newItem.Created);
+            Assert.True(_facilityData.Count == 2);
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        public void RemoveFacility_ValidModel(int siteId, int facilityId)
+        {
+            //act
+            var service = new SiteService(_siteRepository.Object, _facilityRepository.Object, _logger.Object);
+            service.RemoveFacility(siteId, facilityId);
+
+            //assert
+            Assert.DoesNotContain(_facilityData, d => d.Id == facilityId && d.SiteId == siteId);
         }
     }
 }
