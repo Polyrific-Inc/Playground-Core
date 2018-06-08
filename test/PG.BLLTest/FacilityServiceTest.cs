@@ -6,6 +6,7 @@ using PG.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace PG.BLLTest
@@ -23,134 +24,132 @@ namespace PG.BLLTest
                 new Facility
                 {
                     Id = 1,
-                    Name = "Facitlity 1"
+                    Name = "Facility 1"
                 }
             };
-
+            
             _facilityRepository = new Mock<IFacilityRepository>();
             _logger = new Mock<ILogger<FacilityService>>();
+
+            SetupRepository();
         }
 
-        [Theory]
-        [InlineData(2)]
-        public void Create_ValidModel_ReturnFacilityId(int newId)
+        private void SetupRepository()
         {
-            //arrange
-            _facilityRepository.Setup(a => a.Create(It.IsAny<Facility>())).Returns(newId).Callback((Facility c) =>
+            _facilityRepository.Setup(r => r.Get(It.IsAny<int>(), f => f.Site)).Returns((int id, Expression<Func<Facility, object>>[] includeProperties) =>
             {
-                c.Id = newId;
-                _data.Add(c);
+                var item = _data.FirstOrDefault(d => d.Id == id);
+                if (item != null)
+                    item.Site = new Site();
+
+                return item;
             });
-            var model = new Facility();
 
-            //act
-            var service = new FacilityService(_facilityRepository.Object, _logger.Object);
-            var returnId = service.Create(model);
-
-            //assert
-            Assert.Equal(newId, returnId);
-            Assert.NotEqual(0, model.Id);
-            Assert.NotEqual(DateTime.MinValue, model.Created);
-            Assert.True(_data.Count == 2);
-        }
-
-        [Theory]
-        [InlineData(1)]
-        public void Update_ValidModel_ReturnFacilityId(int id)
-        {
-            //arrange
-            _facilityRepository.Setup(a => a.Update(It.IsAny<Facility>())).Callback((Facility c) =>
+            _facilityRepository.Setup(r => r.Create(It.IsAny<Facility>())).Returns(2).Callback((Facility item) =>
             {
-                var getData = _data.FirstOrDefault(a => a.Id == id);
-                if (getData != null)
+                item.Id = 2;
+                _data.Add(item);
+            });
+
+            _facilityRepository.Setup(r => r.Update(It.IsAny<Facility>())).Callback((Facility item) =>
+            {
+                var oldItem = _data.FirstOrDefault(d => d.Id == item.Id);
+                if (oldItem != null)
                 {
-                    _data.Remove(getData);
-                    _data.Add(c);
+                    _data.Remove(oldItem);
+                    _data.Add(item);
                 }
             });
 
-            var model = new Facility()
+            _facilityRepository.Setup(d => d.Delete(It.IsAny<int>())).Callback((int id) =>
             {
-                Id = id,
-                Name = $"Facitlity {id} (edited)"
-            };
-
-            var currentTime = DateTime.UtcNow;
-
-            //act
-            var service = new FacilityService(_facilityRepository.Object, _logger.Object);
-            service.Update(model);
-            var updatedData = _data.First(a => a.Id == id);
-
-            //assert
-            Assert.NotNull(updatedData);
-            Assert.Equal(updatedData.Name, model.Name);
-            Assert.True(updatedData.Updated >= currentTime);
+                var deleteddata = _data.FirstOrDefault(a => a.Id == id);
+                if (deleteddata != null)
+                    _data.Remove(deleteddata);
+            });
         }
 
         [Theory]
         [InlineData(1)]
-        public void Delete_ValidId_DataDeleted(int id)
+        public void GetById_ReturnItemWithSite(int id)
         {
-            //arrange
-            _facilityRepository.Setup(a => a.Delete(id)).Callback(() =>
-            {
-                var deleteddata = _data.First(a => a.Id == id);
-                _data.Remove(deleteddata);
-            });
-
             //act
             var service = new FacilityService(_facilityRepository.Object, _logger.Object);
-            service.Delete(id);
+            var item = service.GetById(id);
 
             //assert
-            Assert.True(_data.Count == 0);
-        }
-
-        [Theory]
-        [InlineData(1)]
-        public void GetById_ReturnFacilityIncludingSite(int id)
-        {
-            //arrange
-            _facilityRepository.Setup(a => a.Get(id, f => f.Site)).Returns(() =>
-            {
-                var getData = _data.FirstOrDefault(item => item.Id == id);
-                if (getData != null)
-                    getData.Site = new Site();
-
-                return getData;
-            });
-
-            //act
-            var service = new FacilityService(_facilityRepository.Object, _logger.Object);
-            var model = service.GetById(id);
-
-            //assert
-            Assert.NotNull(model);
-            Assert.NotNull(model.Site);
-            Assert.Equal(id, model.Id);
+            Assert.NotNull(item);
+            Assert.NotNull(item.Site);
+            Assert.Equal(id, item.Id);
         }
 
         [Theory]
         [InlineData(2)]
         public void GetById_ReturnNull(int id)
         {
-            //arrange
-            _facilityRepository.Setup(a => a.Get(id, f => f.Site)).Returns(() =>
-            {
-                var getData = _data.FirstOrDefault(item => item.Id == id);
-                if (getData != null)
-                    getData.Site = new Site();
+            //act
+            var service = new FacilityService(_facilityRepository.Object, _logger.Object);
+            var item = service.GetById(id);
 
-                return getData;
-            });
+            //assert
+            Assert.Null(item);
+        }
+
+        [Theory]
+        [InlineData(2)]
+        public void Create_ValidModel_ReturnId(int newId)
+        {
+            //arrange
+            var newItem = new Facility();
 
             //act
             var service = new FacilityService(_facilityRepository.Object, _logger.Object);
-            var model = service.GetById(id);
+            var returnId = service.Create(newItem);
 
             //assert
-            Assert.Null(model);
+            Assert.Equal(newId, returnId);
+            Assert.NotEqual(0, newItem.Id);
+            Assert.NotEqual(DateTime.MinValue, newItem.Created);
+            Assert.True(_data.Count == 2);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void Update_ValidModel(int id)
+        {
+            //arrange
+            var updatedItem = new Facility
+            {
+                Id = id,
+                Name = $"Facility {id} (edited)"
+            };
+
+            var currentTime = DateTime.UtcNow;
+
+            //act
+            var service = new FacilityService(_facilityRepository.Object, _logger.Object);
+            service.Update(updatedItem);
+
+            var updatedData = _data.FirstOrDefault(d => d.Id == id);
+
+            //assert
+            if (updatedData != null)
+            {
+                Assert.Equal(updatedData.Name, updatedItem.Name);
+                Assert.True(updatedData.Updated >= currentTime);
+            }
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public void Delete_ValidId_DataDeleted(int id)
+        {
+            //act
+            var service = new FacilityService(_facilityRepository.Object, _logger.Object);
+            service.Delete(id);
+
+            //assert
+            Assert.DoesNotContain(_data, d => d.Id == id);
         }
     }
 }
