@@ -5,17 +5,21 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{181F2FC0-AFC4-48E2-8192-52B14E6DE673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.Api", "src\PG.Api\PG.Api.csproj", "{7065334B-478E-4631-9F63-B9F1B611B2AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.Api", "src\PG.Api\PG.Api.csproj", "{7065334B-478E-4631-9F63-B9F1B611B2AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.BLL", "src\PG.BLL\PG.BLL.csproj", "{35292227-5884-429B-A709-792F2F5819E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.BLL", "src\PG.BLL\PG.BLL.csproj", "{35292227-5884-429B-A709-792F2F5819E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.Common", "src\PG.Common\PG.Common.csproj", "{44641CA3-646F-4BB8-BCA3-44FB005D08FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.Common", "src\PG.Common\PG.Common.csproj", "{44641CA3-646F-4BB8-BCA3-44FB005D08FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.DataAccess", "src\PG.DataAccess\PG.DataAccess.csproj", "{D28FE58F-1A03-4FCA-A7F0-7A67F3D70479}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.DataAccess", "src\PG.DataAccess\PG.DataAccess.csproj", "{D28FE58F-1A03-4FCA-A7F0-7A67F3D70479}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.Model", "src\PG.Model\PG.Model.csproj", "{83134872-0773-4BB7-B59D-00E0619D8700}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.Model", "src\PG.Model\PG.Model.csproj", "{83134872-0773-4BB7-B59D-00E0619D8700}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.Repository", "src\PG.Repository\PG.Repository.csproj", "{7546F4DB-3076-44A4-A57D-5AB31E3AC147}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.Repository", "src\PG.Repository\PG.Repository.csproj", "{7546F4DB-3076-44A4-A57D-5AB31E3AC147}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{48454651-6A7A-4B1F-8593-22EC34C4FE32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.BLLTest", "test\PG.BLLTest\PG.BLLTest.csproj", "{0C38009A-4291-4924-AE38-A7E9495A74A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,9 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7065334B-478E-4631-9F63-B9F1B611B2AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -102,6 +103,21 @@ Global
 		{7546F4DB-3076-44A4-A57D-5AB31E3AC147}.Release|x64.Build.0 = Release|Any CPU
 		{7546F4DB-3076-44A4-A57D-5AB31E3AC147}.Release|x86.ActiveCfg = Release|Any CPU
 		{7546F4DB-3076-44A4-A57D-5AB31E3AC147}.Release|x86.Build.0 = Release|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Debug|x64.Build.0 = Debug|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Debug|x86.Build.0 = Debug|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Release|x64.ActiveCfg = Release|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Release|x64.Build.0 = Release|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Release|x86.ActiveCfg = Release|Any CPU
+		{0C38009A-4291-4924-AE38-A7E9495A74A1}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7065334B-478E-4631-9F63-B9F1B611B2AA} = {181F2FC0-AFC4-48E2-8192-52B14E6DE673}
@@ -110,5 +126,9 @@ Global
 		{D28FE58F-1A03-4FCA-A7F0-7A67F3D70479} = {181F2FC0-AFC4-48E2-8192-52B14E6DE673}
 		{83134872-0773-4BB7-B59D-00E0619D8700} = {181F2FC0-AFC4-48E2-8192-52B14E6DE673}
 		{7546F4DB-3076-44A4-A57D-5AB31E3AC147} = {181F2FC0-AFC4-48E2-8192-52B14E6DE673}
+		{0C38009A-4291-4924-AE38-A7E9495A74A1} = {48454651-6A7A-4B1F-8593-22EC34C4FE32}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28241625-E763-4B5C-B3DC-FFB1CB615214}
 	EndGlobalSection
 EndGlobal
