@@ -1,3 +1,5 @@
+// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
+
 using Microsoft.Extensions.Logging;
 using Moq;
 using PG.BLL;
