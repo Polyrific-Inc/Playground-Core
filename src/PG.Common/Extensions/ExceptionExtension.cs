@@ -47,7 +47,7 @@ namespace PG.Common.Extensions
             return message;
         }
 
-        public static List<string> GetExceptionMessageList(this System.Exception exception, string separator)
+        public static List<string> GetExceptionMessageList(this System.Exception exception)
         {
             var list = new List<string>();
             var ex = exception;
