@@ -1,5 +1,6 @@
 ﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
 
+using System;
 using System.Linq;
 
 namespace PG.Common.Extensions
@@ -8,13 +9,18 @@ namespace PG.Common.Extensions
     {
         public static PagedList<T> ToPagedList<T>(this IQueryable<T> query, int pageIndex, int pageSize)
         {
+            var totalCount = query.Count();
+            var maxPageIndex = Math.Ceiling((double) totalCount / pageSize);
+            
             if (pageIndex < 1)
                 pageIndex = 1;
 
-            int totalCount = query.Count();
-            IQueryable<T> collection = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+            if (pageIndex > maxPageIndex)
+                pageIndex = (int)maxPageIndex;
 
-            return new PagedList<T>(collection, pageIndex, pageSize, totalCount);
+            var source = query.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+
+            return new PagedList<T>(source, pageIndex, pageSize, totalCount);
         }
     }
 }
