@@ -1,0 +1,11 @@
+language: csharp
+solution: Playground-Core.sln
+mono: none
+dotnet: 2.1.105
+branches:
+  only:
+  - master
+script:
+ - dotnet restore --verbosity Detailed
+ - dotnet build --configuration release
+ - dotnet test ./test/*Test/*.csproj --configuration release
