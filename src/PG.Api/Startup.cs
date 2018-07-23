@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PG.Api.DIConfigs;
 using PG.DataAccess;
 using PG.Model.Identity;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PG.Api
 {
@@ -43,6 +44,11 @@ namespace PG.Api
             services.RegisterAppServices();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new Info { Title = "Playground Core API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +62,14 @@ namespace PG.Api
             {
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Playground Core API - v1");
+                s.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();

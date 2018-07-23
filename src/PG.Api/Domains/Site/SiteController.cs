@@ -33,6 +33,13 @@ namespace PG.Api.Domains.Site
             return base.Post(value, "GetSiteById");
         }
 
+        //[Authorize]
+        [HttpPost("base")]
+        public override IActionResult Post([FromBody] NewSiteDto value, string createdAtRouteName)
+        {
+            return base.Post(value, createdAtRouteName);
+        }
+
         [Authorize]
         [HttpPut("{id}")]
         public override ActionResult<SiteDto> Put(int id, [FromBody] EditSiteDto value)

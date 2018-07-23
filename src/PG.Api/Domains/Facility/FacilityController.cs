@@ -30,6 +30,13 @@ namespace PG.Api.Domains.Facility
         }
 
         [Authorize]
+        [HttpPost("base")]
+        public override IActionResult Post([FromBody] NewFacilityDto value, string createdAtRouteName)
+        {
+            return base.Post(value, createdAtRouteName);
+        }
+
+        [Authorize]
         [HttpPut("{id}")]
         public override ActionResult<FacilityDto> Put(int id, [FromBody] EditFacilityDto value)
         {

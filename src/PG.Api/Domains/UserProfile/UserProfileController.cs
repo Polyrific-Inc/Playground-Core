@@ -23,10 +23,24 @@ namespace PG.Api.Domains.UserProfile
         }
 
         [Authorize]
+        [HttpPost("")]
+        public override IActionResult Post([FromBody] UserProfileDto value, string createdAtRouteName)
+        {
+            return base.Post(value, "GetUserProfileById");
+        }
+
+        [Authorize]
         [HttpPut("{id}")]
         public override ActionResult<UserProfileDto> Put(int id, [FromBody] EditUserProfileDto value)
         {
             return base.Put(id, value);
+        }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public override IActionResult Delete(int id)
+        {
+            return base.Delete(id);
         }
 
         [Authorize]
