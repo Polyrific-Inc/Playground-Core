@@ -1,11 +1,16 @@
 ﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
 
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using PG.Api.Auth;
+using PG.Api.Helpers;
 using PG.BLL;
 using PG.Model.Identity;
 
@@ -16,11 +21,15 @@ namespace PG.Api.Domains.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserProfileService _userProfileService;
+        private readonly IJwtAuthFactory _jwtFactory;
+        private readonly JwtIssuerOptions _jwtOptions;
 
-        public AccountController(UserManager<ApplicationUser> userManager, IUserProfileService userProfileService)
+        public AccountController(UserManager<ApplicationUser> userManager, IUserProfileService userProfileService, IJwtAuthFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _userManager = userManager;
             _userProfileService = userProfileService;
+            _jwtFactory = jwtFactory;
+            _jwtOptions = jwtOptions.Value;
         }
 
         [HttpPost("Register")]
@@ -80,6 +89,44 @@ namespace PG.Api.Domains.Account
 
             return BadRequest("Email could not be confirmed.");
 
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Post([FromBody]CredentialDto credentials)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var identity = await GetClaimsIdentity(credentials.Email, credentials.Password);
+            if (identity == null)
+            {
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid username or password.", ModelState));
+            }
+
+            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.Email, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            return new OkObjectResult(jwt);
+        }
+
+        private async Task<ClaimsIdentity> GetClaimsIdentity(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                return await Task.FromResult<ClaimsIdentity>(null);
+
+            // get the user to verifty
+            var userToVerify = await _userManager.FindByNameAsync(email);
+
+            if (userToVerify == null) return await Task.FromResult<ClaimsIdentity>(null);
+
+            // check the credentials
+            if (await _userManager.CheckPasswordAsync(userToVerify, password))
+            {
+                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(email, userToVerify.Id.ToString()));
+            }
+
+            // Credentials are invalid, or account doesn't exist
+            return await Task.FromResult<ClaimsIdentity>(null);
         }
 
         [Authorize]

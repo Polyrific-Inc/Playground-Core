@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.BLLTest", "test\PG.BLLTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.RepositoryTest", "test\PG.RepositoryTest\PG.RepositoryTest.csproj", "{7EFC3A93-C809-46CA-B1B0-FA8B815299EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PG.CommonTest", "test\PG.CommonTest\PG.CommonTest.csproj", "{5C7A3F0F-5D26-4536-82A5-C01EA631E519}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PG.CommonTest", "test\PG.CommonTest\PG.CommonTest.csproj", "{5C7A3F0F-5D26-4536-82A5-C01EA631E519}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
