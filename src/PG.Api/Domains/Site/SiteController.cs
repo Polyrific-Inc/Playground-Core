@@ -42,7 +42,7 @@ namespace PG.Api.Domains.Site
 
         [Authorize]
         [HttpDelete("{id}")]
-        public override IActionResult Delete(int id)
+        public new IActionResult Delete(int id)
         {
             return base.Delete(id);
         }

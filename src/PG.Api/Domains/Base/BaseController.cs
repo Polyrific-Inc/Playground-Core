@@ -35,7 +35,7 @@ namespace PG.Api.Domains.Base
             return Ok(item);
         }
         
-        public virtual IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
+        protected virtual IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
         {
             var newEntity = value.ToEntity();
             var id = Svc.Create(newEntity);
@@ -61,8 +61,8 @@ namespace PG.Api.Domains.Base
 
             return Ok(item);
         }
-        
-        public virtual IActionResult Delete(int id)
+
+        protected virtual IActionResult Delete(int id)
         {
             Svc.Delete(id);
 
