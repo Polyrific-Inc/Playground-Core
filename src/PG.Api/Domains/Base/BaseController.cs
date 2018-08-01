@@ -22,8 +22,8 @@ namespace PG.Api.Domains.Base
             Svc = service;
             Logger = logger;
         }
-        
-        public virtual ActionResult<TDto> Get(int id)
+
+        protected virtual ActionResult<TDto> Get(int id)
         {
             var entity = Svc.GetById(id);
             if (entity == null)
@@ -45,8 +45,8 @@ namespace PG.Api.Domains.Base
             
             return CreatedAtRoute(createdAtRouteName, new {id}, item);
         }
-        
-        public virtual ActionResult<TDto> Put(int id, TEditDto value)
+
+        protected virtual ActionResult<TDto> Put(int id, TEditDto value)
         {
             if (id != value.Id)
                 return BadRequest();

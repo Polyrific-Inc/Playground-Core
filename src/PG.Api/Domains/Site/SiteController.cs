@@ -21,7 +21,7 @@ namespace PG.Api.Domains.Site
         }
 
         [HttpGet("{id}", Name = "GetSiteById")]
-        public override ActionResult<SiteDto> Get(int id)
+        public new ActionResult<SiteDto> Get(int id)
         {
             return base.Get(id);
         }
@@ -35,7 +35,7 @@ namespace PG.Api.Domains.Site
 
         [Authorize]
         [HttpPut("{id}")]
-        public override ActionResult<SiteDto> Put(int id, [FromBody] EditSiteDto value)
+        public new ActionResult<SiteDto> Put(int id, [FromBody] EditSiteDto value)
         {
             return base.Put(id, value);
         }

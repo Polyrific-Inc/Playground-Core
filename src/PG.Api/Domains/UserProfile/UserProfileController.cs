@@ -17,14 +17,14 @@ namespace PG.Api.Domains.UserProfile
 
         [Authorize]
         [HttpGet("{id}", Name = "GetUserProfileById")]
-        public override ActionResult<UserProfileDto> Get(int id)
+        public new ActionResult<UserProfileDto> Get(int id)
         {
             return base.Get(id);
         }
 
         [Authorize]
         [HttpPut("{id}")]
-        public override ActionResult<UserProfileDto> Put(int id, [FromBody] EditUserProfileDto value)
+        public new ActionResult<UserProfileDto> Put(int id, [FromBody] EditUserProfileDto value)
         {
             return base.Put(id, value);
         }

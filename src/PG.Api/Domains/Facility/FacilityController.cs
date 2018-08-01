@@ -17,7 +17,7 @@ namespace PG.Api.Domains.Facility
         }
 
         [HttpGet("{id}", Name = "GetFacilityById")]
-        public override ActionResult<FacilityDto> Get(int id)
+        public new ActionResult<FacilityDto> Get(int id)
         {
             return base.Get(id);
         }
@@ -31,7 +31,7 @@ namespace PG.Api.Domains.Facility
 
         [Authorize]
         [HttpPut("{id}")]
-        public override ActionResult<FacilityDto> Put(int id, [FromBody] EditFacilityDto value)
+        public new ActionResult<FacilityDto> Put(int id, [FromBody] EditFacilityDto value)
         {
             return base.Put(id, value);
         }
