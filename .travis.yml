@@ -8,4 +8,3 @@ branches:
 script:
  - dotnet restore --verbosity Detailed
  - dotnet build --configuration release
- - dotnet test ./test/*Test/*.csproj --configuration release
