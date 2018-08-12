@@ -12,6 +12,9 @@ using PG.Api.DIConfigs;
 using PG.DataAccess;
 using PG.Model.Identity;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Reflection;
+using System.IO;
+using System;
 
 namespace PG.Api
 {
@@ -47,7 +50,28 @@ namespace PG.Api
 
             services.AddSwaggerGen(s =>
             {
-                s.SwaggerDoc("v1", new Info { Title = "Playground Core API", Version = "v1" });
+                s.SwaggerDoc("v1", new Info {
+                    Title = "Playground Core API",
+                    Version = "v1",
+                    //Description = "A simple example ASP.NET Core Web API",
+                    //TermsOfService = "None",
+                    //Contact = new Contact
+                    //{
+                    //    Name = "Shayne Boyer",
+                    //    Email = string.Empty,
+                    //    Url = "https://twitter.com/spboyer"
+                    //},
+                    //License = new License
+                    //{
+                    //    Name = "Use under LICX",
+                    //    Url = "https://example.com/license"
+                    //}
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                s.IncludeXmlComments(xmlPath);
             });
         }
 

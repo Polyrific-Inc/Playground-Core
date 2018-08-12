@@ -23,6 +23,17 @@ namespace PG.Api.Domains.Account
             _userProfileService = userProfileService;
         }
 
+        /// <summary>
+        /// Register new User
+        /// </summary>
+        /// <param name="model">Values model to create the new User</param>
+        /// <returns>
+        /// The User Id and confirmation code
+        /// </returns>
+        /// <response code="200">Returns the User Id and confirmation code</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(201)]
+        [ProducesResponseType(500)]
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto model)
         {
@@ -59,6 +70,20 @@ namespace PG.Api.Domains.Account
             return Ok(new { userId = user.Id, confirmCode = HttpUtility.UrlEncode(code) });
         }
 
+        /// <summary>
+        /// Confirm email address
+        /// </summary>        
+        /// <param name="userId">User's ID</param>
+        /// <param name="code">Confirmation code</param>
+        /// <returns>
+        /// Reset password token
+        /// </returns>
+        /// <response code="200">Returns reset password token</response>
+        /// <response code="400">If the request malsyntax</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         [HttpGet("Confirm", Name = "ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(int userId, string code)
         {
@@ -82,7 +107,20 @@ namespace PG.Api.Domains.Account
 
         }
 
-        [Authorize]
+        /// <summary>
+        /// Get email confirmation URL
+        /// </summary>        
+        /// <param name="userId">User's ID</param>
+        /// <returns>
+        /// URL for email confirmation
+        /// </returns>
+        /// <response code="200">Returns URL for email confirmation</response>
+        /// <response code="400">If the request malsyntax</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpGet("{userId}/ConfirmEmailUrl")]
         public async Task<IActionResult> GetConfirmEmailUrl(int userId)
         {
@@ -96,22 +134,57 @@ namespace PG.Api.Domains.Account
 
             return Ok(new { url });
         }
-        
-        [Authorize]
+
+        /// <summary>
+        /// Activate a User
+        /// </summary>
+        /// <param name="userId">User's ID</param>
+        /// <returns>
+        /// </returns>
+        /// <response code="200">Success</response>
+        /// <response code="400">If the request malsyntax</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpPost("{userId}/Activate")]
         public async Task<IActionResult> ActivateUser(int userId)
         {
             return await SetActiveStatus(userId, true);
         }
-        
-        [Authorize]
+
+        /// <summary>
+        /// Deactivate a User
+        /// </summary>
+        /// <param name="userId">User's ID</param>
+        /// <returns>
+        /// </returns>
+        /// <response code="200">Success</response>
+        /// <response code="400">If the request malsyntax</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpPost("{userId}/Deactivate")]
         public async Task<IActionResult> DeactivateUser(int userId)
         {
             return await SetActiveStatus(userId, false);
         }
 
-        [Authorize]
+        /// <summary>
+        /// Get URL for password reset
+        /// </summary>        
+        /// <param name="userId">User's ID</param>
+        /// <returns>
+        /// URL for password reset and template with needed data for updating password
+        /// </returns>
+        /// <response code="200">Returns URL for password reset and template with needed data for updating password</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpGet("{userId}/ResetPasswordUrl")]
         public async Task<IActionResult> GetResetPasswordUrl(int userId)
         {
@@ -135,6 +208,14 @@ namespace PG.Api.Domains.Account
             return Ok(new {url, data});
         }
 
+        /// <summary>
+        /// Reset User's password
+        /// </summary>
+        /// <param name="model">Value model for resetting the password</param>
+        /// <response code="200">Success</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         [HttpPost("ResetPassword", Name = "ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
         {
@@ -153,7 +234,15 @@ namespace PG.Api.Domains.Account
             return Ok();
         }
 
-        [Authorize]
+        /// <summary>
+        /// Delete a user
+        /// </summary>
+        /// <param name="userId">User id to delete</param>
+        /// <response code="204">If the delete successfull</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(204)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpDelete("{userId}/Delete")]
         public async Task<IActionResult> DeleteUser(int userId)
         {

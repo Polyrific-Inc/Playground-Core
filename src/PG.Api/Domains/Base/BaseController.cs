@@ -23,7 +23,7 @@ namespace PG.Api.Domains.Base
             Logger = logger;
         }
 
-        protected virtual ActionResult<TDto> Get(int id)
+        protected ActionResult<TDto> Get(int id)
         {
             var entity = Svc.GetById(id);
             if (entity == null)
@@ -35,7 +35,7 @@ namespace PG.Api.Domains.Base
             return Ok(item);
         }
         
-        protected virtual IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
+        protected IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
         {
             var newEntity = value.ToEntity();
             var id = Svc.Create(newEntity);
@@ -46,12 +46,15 @@ namespace PG.Api.Domains.Base
             return CreatedAtRoute(createdAtRouteName, new {id}, item);
         }
 
-        protected virtual ActionResult<TDto> Put(int id, TEditDto value)
+        protected ActionResult<TDto> Put(int id, TEditDto value)
         {
             if (id != value.Id)
                 return BadRequest();
 
             var originalEntity = Svc.GetById(id);
+            if (originalEntity == null)
+                return NotFound();
+
             var updatedEntity = value.ToEntity(originalEntity);
 
             Svc.Update(updatedEntity);
@@ -62,7 +65,7 @@ namespace PG.Api.Domains.Base
             return Ok(item);
         }
 
-        protected virtual IActionResult Delete(int id)
+        protected IActionResult Delete(int id)
         {
             Svc.Delete(id);
 

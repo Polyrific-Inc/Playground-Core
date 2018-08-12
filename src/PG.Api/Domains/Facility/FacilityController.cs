@@ -16,29 +16,73 @@ namespace PG.Api.Domains.Facility
         {
         }
 
+        /// <summary>
+        /// Get a Facility by it's ID
+        /// </summary>        
+        /// <param name="id">Facility ID to get</param>
+        /// <returns>
+        /// The Facility data if found
+        /// </returns>
+        /// <response code="200">Returns the Facility data</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
         [HttpGet("{id}", Name = "GetFacilityById")]
-        public new ActionResult<FacilityDto> Get(int id)
+        public ActionResult<FacilityDto> Get(int id)
         {
             return base.Get(id);
         }
 
-        [Authorize]
+        /// <summary>
+        /// Create new Facility data
+        /// </summary>
+        /// <param name="value">Values to create the new Facility</param>
+        /// <returns>
+        /// The newly created Facility data
+        /// </returns>
+        /// <response code="201">Returns the newly created Facility</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(201)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpPost("")]
         public IActionResult Post([FromBody] NewFacilityDto value)
         {
             return base.Post(value, "GetFacilityById");
         }
 
-        [Authorize]
+        /// <summary>
+        /// Update Facility data
+        /// </summary>
+        /// <param name="id">Facility id to update</param>
+        /// <param name="value">New value for update the Facility</param>
+        /// <returns>
+        /// Returns the updated Facility data
+        /// </returns>
+        /// <response code="200">Returns the updated Facility data</response>
+        /// <response code="400">If there is malsyntax</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpPut("{id}")]
-        public new ActionResult<FacilityDto> Put(int id, [FromBody] EditFacilityDto value)
+        public ActionResult<FacilityDto> Put(int id, [FromBody] EditFacilityDto value)
         {
             return base.Put(id, value);
         }
 
-        [Authorize]
+        /// <summary>
+        /// Delete a Facility
+        /// </summary>
+        /// <param name="id">Facility id to delete</param>
+        /// <response code="204">If the delete successfull</response>
+        /// <response code="500">If there is error when executing the code</response>
+        [ProducesResponseType(204)]
+        [ProducesResponseType(500)]
+        //[Authorize]
         [HttpDelete("{id}")]
-        public new IActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             return base.Delete(id);
         }
