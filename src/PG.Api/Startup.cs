@@ -86,7 +86,7 @@ namespace PG.Api
                 configureOptions.TokenValidationParameters = tokenValidationParameters;
                 configureOptions.SaveToken = true;
             });
-
+            services.AddCors();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiUser", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, Constants.Strings.JwtClaims.ApiAccess));
@@ -115,7 +115,7 @@ namespace PG.Api
             {
                 app.UseHsts();
             }
-
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ using PG.Model.Identity;
 
 namespace PG.Api.Domains.Account
 {
-    [Route("Account")]
+    [Route("Account")]    
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
