@@ -10,8 +10,11 @@
       </li>                  
       <li class="nav-item">
         <a (click)="onLogout()" *ngIf="isLoggedIn$ | async" class="nav-link">Logout</a>
-        <a routerLink="login" *ngIf="!(isLoggedIn$ | async)" class="nav-link">Login</a>
+        <a routerLink="login" *ngIf="!(isLoggedIn$ | async)" class="nav-link">Login</a>        
       </li>                  
+      <li class="nav-item">
+        <a routerLink="register" *ngIf="!(isLoggedIn$ | async)" class="nav-link">Register</a>
+      </li>
     </ul>
   </div>
 </nav>

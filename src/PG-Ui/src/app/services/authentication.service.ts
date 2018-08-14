@@ -25,6 +25,7 @@ export class AuthenticationService {
   }
 
   get isLoggedIn() {
+    this.checkLoggedIn();
     return this.loggedIn.asObservable();
   }
 
@@ -32,5 +33,13 @@ export class AuthenticationService {
     localStorage.removeItem('currentUser');
     this.loggedIn.next(false);
     this.router.navigate(["/login"]);
+  }
+
+  checkLoggedIn(){
+    if(localStorage.getItem('currentUser') != null){
+      this.loggedIn.next(true);
+    }else{
+      this.loggedIn.next(false);
+    }
   }
 }
