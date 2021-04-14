@@ -17,13 +17,13 @@ namespace PG.Api.Domains.Base
     {
         protected TService Svc;
         protected ILogger Logger;
-        private readonly IMapper _mapper;
+        protected IMapper Mapper;
         
         protected BaseController(TService service, ILogger logger, IMapper mapper)
         {
             Svc = service;
             Logger = logger;
-            _mapper = mapper;
+            Mapper = mapper;
         }
         
         public virtual ActionResult<TDto> Get(int id)
@@ -33,18 +33,18 @@ namespace PG.Api.Domains.Base
                 return NotFound();
 
             var item = new TDto();
-            item.LoadFromEntity(entity, _mapper);
+            item.LoadFromEntity(entity, Mapper);
             
             return Ok(item);
         }
         
         public virtual IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
         {
-            var newEntity = _mapper.Map<TEntity>(value);
+            var newEntity = Mapper.Map<TEntity>(value);
             var id = Svc.Create(newEntity);
 
             var item = new TDto();
-            item.LoadFromEntity(newEntity, _mapper);
+            item.LoadFromEntity(newEntity, Mapper);
             
             return CreatedAtRoute(createdAtRouteName, new {id}, item);
         }
@@ -55,12 +55,12 @@ namespace PG.Api.Domains.Base
                 return BadRequest();
 
             var originalEntity = Svc.GetById(id);
-            var updatedEntity = _mapper.Map<TEntity>(originalEntity);
+            var updatedEntity = Mapper.Map<TEntity>(originalEntity);
 
             Svc.Update(updatedEntity);
 
             var item = new TDto();
-            item.LoadFromEntity(updatedEntity, _mapper);
+            item.LoadFromEntity(updatedEntity, Mapper);
 
             return Ok(item);
         }

@@ -12,7 +12,6 @@ namespace PG.Api.Domains.UserProfile
     [Route("UserProfile")]
     public class UserProfileController : BaseController<UserProfileDto, EditUserProfileDto, UserProfileDto, Model.UserProfile, IUserProfileService>
     {
-        private readonly IMapper _mapper;
         public UserProfileController(IUserProfileService service, ILogger<UserProfileController> logger, IMapper mapper) : base(service, logger, mapper)
         {
         }
@@ -40,7 +39,7 @@ namespace PG.Api.Domains.UserProfile
                 return NotFound();
 
             var item = new UserProfileDto();
-            item.LoadFromEntity(entity, _mapper);
+            item.LoadFromEntity(entity, Mapper);
             
             return Ok(item);
         }
