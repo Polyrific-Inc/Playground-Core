@@ -1,5 +1,6 @@
 ﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
 
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,8 @@ namespace PG.Api.Domains.UserProfile
     [Route("UserProfile")]
     public class UserProfileController : BaseController<UserProfileDto, EditUserProfileDto, UserProfileDto, Model.UserProfile, IUserProfileService>
     {
-        public UserProfileController(IUserProfileService service, ILogger<UserProfileController> logger) : base(service, logger)
+        private readonly IMapper _mapper;
+        public UserProfileController(IUserProfileService service, ILogger<UserProfileController> logger, IMapper mapper) : base(service, logger, mapper)
         {
         }
 
@@ -38,7 +40,7 @@ namespace PG.Api.Domains.UserProfile
                 return NotFound();
 
             var item = new UserProfileDto();
-            item.LoadFromEntity(entity);
+            item.LoadFromEntity(entity, _mapper);
             
             return Ok(item);
         }

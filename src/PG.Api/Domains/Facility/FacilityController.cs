@@ -1,5 +1,6 @@
 ﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
 
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,11 +12,11 @@ namespace PG.Api.Domains.Facility
     [Route("Facility")]
     public class FacilityController : BaseController<NewFacilityDto, EditFacilityDto, FacilityDto, Model.Facility, IFacilityService>
     {
-        public FacilityController(IFacilityService service, ILogger<FacilityController> logger) 
-            : base(service, logger)
+        public FacilityController(IFacilityService service, ILogger<FacilityController> logger, IMapper mapper) 
+            : base(service, logger, mapper)
         {
         }
-
+        
         [HttpGet("{id}", Name = "GetFacilityById")]
         public override ActionResult<FacilityDto> Get(int id)
         {
