@@ -1,5 +1,6 @@
 ﻿// // Copyright (c) Polyrific, Inc 2018. All rights reserved.
 
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PG.BLL;
@@ -16,11 +17,13 @@ namespace PG.Api.Domains.Base
     {
         protected TService Svc;
         protected ILogger Logger;
+        protected IMapper Mapper;
         
-        protected BaseController(TService service, ILogger logger)
+        protected BaseController(TService service, ILogger logger, IMapper mapper)
         {
             Svc = service;
             Logger = logger;
+            Mapper = mapper;
         }
         
         public virtual ActionResult<TDto> Get(int id)
@@ -30,18 +33,18 @@ namespace PG.Api.Domains.Base
                 return NotFound();
 
             var item = new TDto();
-            item.LoadFromEntity(entity);
+            item.LoadFromEntity(entity, Mapper);
             
             return Ok(item);
         }
         
         public virtual IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
         {
-            var newEntity = value.ToEntity();
+            var newEntity = Mapper.Map<TEntity>(value);
             var id = Svc.Create(newEntity);
 
             var item = new TDto();
-            item.LoadFromEntity(newEntity);
+            item.LoadFromEntity(newEntity, Mapper);
             
             return CreatedAtRoute(createdAtRouteName, new {id}, item);
         }
@@ -52,12 +55,12 @@ namespace PG.Api.Domains.Base
                 return BadRequest();
 
             var originalEntity = Svc.GetById(id);
-            var updatedEntity = value.ToEntity(originalEntity);
+            var updatedEntity = Mapper.Map<TEntity>(originalEntity);
 
             Svc.Update(updatedEntity);
 
             var item = new TDto();
-            item.LoadFromEntity(updatedEntity);
+            item.LoadFromEntity(updatedEntity, Mapper);
 
             return Ok(item);
         }

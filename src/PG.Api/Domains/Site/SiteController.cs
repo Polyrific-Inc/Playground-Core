@@ -8,16 +8,16 @@ using PG.BLL;
 using PG.Common;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 
 namespace PG.Api.Domains.Site
 {
     [Route("Site")]
     public class SiteController : BaseController<NewSiteDto, EditSiteDto, SiteDto, Model.Site, ISiteService>
     {
-        public SiteController(ISiteService siteService, ILogger<SiteController> logger)
-            : base(siteService, logger)
+        public SiteController(ISiteService siteService, ILogger<SiteController> logger, IMapper mapper)
+            : base(siteService, logger, mapper)
         {
-            
         }
 
         [HttpGet("{id}", Name = "GetSiteById")]
@@ -55,7 +55,7 @@ namespace PG.Api.Domains.Site
             var source = list.Items.Select(i =>
             {
                 var item = new SiteDto();
-                item.LoadFromEntity(i);
+                item.LoadFromEntity(i, Mapper);
 
                 return item;
             });
@@ -71,7 +71,7 @@ namespace PG.Api.Domains.Site
             var source = list.Items.Select(i =>
             {
                 var item = new FacilityDto();
-                item.LoadFromEntity(i);
+                item.LoadFromEntity(i, Mapper);
 
                 return item;
             });
@@ -87,11 +87,11 @@ namespace PG.Api.Domains.Site
             if (entity == null)
                 return NotFound();
 
-            var facility = value.ToEntity();
+            var facility = Mapper.Map<Model.Facility>(value);
             int facilityId = Svc.AddFacility(id, facility);
 
             var createdDto = new FacilityDto();
-            createdDto.LoadFromEntity(facility);
+            createdDto.LoadFromEntity(facility, Mapper);
 
             return CreatedAtRoute("GetFacilityById", new {id = facilityId}, createdDto);
         }
