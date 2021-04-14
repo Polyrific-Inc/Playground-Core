@@ -10,16 +10,7 @@ namespace PG.Api.Domains.Base
     {
         public int Id { get; set; }
 
-        public virtual TEntity ToEntity(TEntity originalEntity)
-        {
-            var updatedEntity = originalEntity;
-
-            Mapper.Map(this, updatedEntity);
-
-            return updatedEntity;
-        }
-
-        public virtual void LoadFromEntity(TEntity entity)
+        public virtual void LoadFromEntity(TEntity entity, IMapper mapper)
         {
             Id = entity.Id;
         }
