@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PG.Api.Domains.Base;
 using PG.BLL;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PG.Api.Domains.UserProfile
 {
@@ -18,6 +19,9 @@ namespace PG.Api.Domains.UserProfile
 
         [Authorize]
         [HttpGet("{id}", Name = "GetUserProfileById")]
+        [SwaggerOperation(Summary = "Get User By ID")]
+        [SwaggerResponse(200, "Success: User found")]
+        [SwaggerResponse(404, "Error: User not found")]
         public override ActionResult<UserProfileDto> Get(int id)
         {
             return base.Get(id);
@@ -25,6 +29,9 @@ namespace PG.Api.Domains.UserProfile
 
         [Authorize]
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Update Existing User")]
+        [SwaggerResponse(200, "Success: User updated")]
+        [SwaggerResponse(400, "Error: User not found")]
         public override ActionResult<UserProfileDto> Put(int id, [FromBody] EditUserProfileDto value)
         {
             return base.Put(id, value);
@@ -38,6 +45,7 @@ namespace PG.Api.Domains.UserProfile
 
         [Authorize]
         [HttpGet("u/{username}", Name = "GetUserProfileByUserName")]
+        [SwaggerOperation(Summary = "Get User By Name")]
         public ActionResult<UserProfileDto> Get(string username)
         {
             var entity = Svc.GetByUserName(username);

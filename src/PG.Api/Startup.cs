@@ -47,6 +47,7 @@ namespace PG.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.EnableAnnotations();
             });
         }
 
@@ -65,6 +66,7 @@ namespace PG.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
+                c.DefaultModelsExpandDepth(-1);
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
             });
