@@ -38,6 +38,7 @@ namespace PG.Api.Domains.Base
             return Ok(item);
         }
         
+        [NonAction]
         public virtual IActionResult Post([FromBody] TNewDto value, string createdAtRouteName)
         {
             var newEntity = Mapper.Map<TEntity>(value);

@@ -30,6 +30,12 @@ namespace PG.Api.Domains.UserProfile
             return base.Put(id, value);
         }
 
+        [NonAction]
+        public override IActionResult Delete(int id)
+        {
+            return base.Delete(id);
+        }
+
         [Authorize]
         [HttpGet("u/{username}", Name = "GetUserProfileByUserName")]
         public ActionResult<UserProfileDto> Get(string username)
