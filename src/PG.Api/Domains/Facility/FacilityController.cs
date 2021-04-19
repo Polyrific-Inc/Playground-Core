@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PG.Api.Domains.Base;
 using PG.BLL;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PG.Api.Domains.Facility
 {
@@ -18,6 +19,9 @@ namespace PG.Api.Domains.Facility
         }
         
         [HttpGet("{id}", Name = "GetFacilityById")]
+        [SwaggerOperation(Summary = "Get Facility By ID")]
+        [SwaggerResponse(200, "Success: Facility found")]
+        [SwaggerResponse(404, "Error: Facility not found")]
         public override ActionResult<FacilityDto> Get(int id)
         {
             return base.Get(id);
@@ -25,6 +29,8 @@ namespace PG.Api.Domains.Facility
 
         [Authorize]
         [HttpPost("")]
+        [SwaggerOperation(Summary = "Create New Facility")]
+        [SwaggerResponse(201, "Success: Facility created")]
         public IActionResult Post([FromBody] NewFacilityDto value)
         {
             return base.Post(value, "GetFacilityById");
@@ -32,6 +38,9 @@ namespace PG.Api.Domains.Facility
 
         [Authorize]
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Update Existing Facility")]
+        [SwaggerResponse(200, "Success: Facilty updated")]
+        [SwaggerResponse(400, "Error: Facility not found")]
         public override ActionResult<FacilityDto> Put(int id, [FromBody] EditFacilityDto value)
         {
             return base.Put(id, value);
@@ -39,6 +48,8 @@ namespace PG.Api.Domains.Facility
 
         [Authorize]
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Delete Facility")]
+        [SwaggerResponse(204, "Success: Facility deleted")]
         public override IActionResult Delete(int id)
         {
             return base.Delete(id);

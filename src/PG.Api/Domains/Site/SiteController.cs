@@ -9,6 +9,7 @@ using PG.Common;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PG.Api.Domains.Site
 {
@@ -21,6 +22,9 @@ namespace PG.Api.Domains.Site
         }
 
         [HttpGet("{id}", Name = "GetSiteById")]
+        [SwaggerOperation(Summary = "Get Site By ID")]
+        [SwaggerResponse(200, "Success: Site found")]
+        [SwaggerResponse(404, "Error: Site not found")]
         public override ActionResult<SiteDto> Get(int id)
         {
             return base.Get(id);
@@ -28,6 +32,8 @@ namespace PG.Api.Domains.Site
 
         //[Authorize]
         [HttpPost("")]
+        [SwaggerOperation(Summary = "Create New Site")]
+        [SwaggerResponse(201, "Success: Site created")]
         public IActionResult Post([FromBody] NewSiteDto value)
         {
             return base.Post(value, "GetSiteById");
@@ -35,6 +41,9 @@ namespace PG.Api.Domains.Site
 
         [Authorize]
         [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Update Existing Site")]
+        [SwaggerResponse(200, "Success: Site updated")]
+        [SwaggerResponse(400, "Error: Site not found")]
         public override ActionResult<SiteDto> Put(int id, [FromBody] EditSiteDto value)
         {
             return base.Put(id, value);
@@ -42,12 +51,16 @@ namespace PG.Api.Domains.Site
 
         [Authorize]
         [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Delete Site")]
+        [SwaggerResponse(204, "Success: Site deleted")]
         public override IActionResult Delete(int id)
         {
             return base.Delete(id);
         }
 
         [HttpGet("n/{name}")]
+        [SwaggerOperation(Summary = "Get Site By Name")]
+        [SwaggerResponse(200, "Success: Site found")]
         public ActionResult<SiteDto> GetSiteByName(string name)
         {
             var list = Svc.GetByName(name);
@@ -64,6 +77,8 @@ namespace PG.Api.Domains.Site
         }
 
         [HttpGet("{id}/Facilities")]
+        [SwaggerOperation(Summary = "Get Site Facility")]
+        [SwaggerResponse(200, "Success: Site facility found")]
         public ActionResult<FacilityDto> GetFacilities(int id)
         {
             var list = Svc.GetFacilities(id);
@@ -81,6 +96,9 @@ namespace PG.Api.Domains.Site
 
         [Authorize]
         [HttpPost("{id}/AddFacility")]
+        [SwaggerOperation(Summary = "Add Site Facility")]
+        [SwaggerResponse(201, "Success: Site facility created")]
+        [SwaggerResponse(404, "Error: Site not found")]
         public IActionResult AddFacility(int id, [FromBody] NewFacilityDto value)
         {
             var entity = Svc.GetById(id);
@@ -98,6 +116,8 @@ namespace PG.Api.Domains.Site
 
         [Authorize]
         [HttpDelete("{id}/RemoveFacility/{facilityId}")]
+        [SwaggerOperation(Summary = "Delete Site Facility")]
+        [SwaggerResponse(204, "Success: Site facility deleted")]
         public IActionResult RemoveFacility(int id, int facilityId)
         {
             Svc.RemoveFacility(id, facilityId);
